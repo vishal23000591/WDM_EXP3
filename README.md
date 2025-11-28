@@ -35,24 +35,43 @@ minimum support threshold.</p>
 for each wear category.</p>
 <p align="justify">
 8. Visulaize the sequence patterns using matplotlib.
-</p>
+
 ### Program:
 
-```python
+```
 from collections import defaultdict
 from itertools import combinations
 # Function to generate candidate k-item sequences
 def generate_candidates(dataset, k):
+ candidate_count = defaultdict(int)
 
+    for sequence in dataset:
+        for itemset in combinations(sequence, k):
+            candidate_count[itemset] += 1
 
-    /WRITE YOUR CODE HERE/
-
+    return candidate_count
 
 #Function to perform GSP algorithm
 def gsp(dataset, min_support):
+    # Step 1: Initialize the frequent patterns dictionary
+    frequent_patterns = defaultdict(int)
 
+    # Step 2: Generate frequent 1-item sequences
+    k = 1
+    candidate_count = generate_candidates(dataset, k)
 
-  /WRITE YOUR CODE HERE/
+    # Step 3: Prune and update frequent patterns
+    frequent_patterns.update({itemset: count for itemset, count in candidate_count.items() if count >= min_support})
+
+    # Step 4: Generate frequent k-item sequences until no more can be generated
+    while candidate_count:
+        k += 1
+        candidate_count = generate_candidates(dataset, k)
+
+        # Prune and update frequent patterns
+        frequent_patterns.update({itemset: count for itemset, count in candidate_count.items() if count >= min_support})
+
+    return frequent_patterns
 
 
 #Example dataset for each category
@@ -100,11 +119,13 @@ if party_wear_result:
  print(f"Pattern: {pattern}, Support: {support}")
 else:
  print("No frequent sequential patterns found in Party Wear.")
+
 ```
 ### Output:
+![image](https://github.com/user-attachments/assets/12e49d72-42b4-4043-add5-c5b3500275d5)
 
 ### Visualization:
-```python
+```
 import matplotlib.pyplot as plt
 
 # Function to visualize frequent sequential patterns with a line plot
@@ -130,6 +151,9 @@ visualize_patterns_line(bottom_wear_result, 'Bottom Wear')
 visualize_patterns_line(party_wear_result, 'Party Wear')
 ```
 ### Output:
+![image](https://github.com/user-attachments/assets/6554c645-4529-4340-b157-26c1319c19b8)
 
+![image](https://github.com/user-attachments/assets/104d11ae-1733-4975-be81-d1ee7a19ef2f)
 
 ### Result:
+The GSP algorithm was successfully implemented in Python. Frequent sequential patterns were discovered for different categories (Top Wear, Bottom Wear, and Party Wear) based on a minimum support threshold. The results were also visualized using line plots for better understanding.
